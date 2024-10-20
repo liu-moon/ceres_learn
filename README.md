@@ -1,6 +1,6 @@
-# install
+# Install
 
-## dependencies
+## Dependencies
 
 ``` shell
 # CMake
@@ -15,7 +15,7 @@ sudo apt-get install libeigen3-dev
 sudo apt-get install libsuitesparse-dev
 ```
 
-## install Ceres
+## Install Ceres
 
 ``` shell
 tar zxf ceres-solver-2.2.0.tar.gz
@@ -30,7 +30,7 @@ make test
 make install
 ```
 
-## tutorial
+## Tutorial
 
 [tutorial](http://ceres-solver.org/tutorial.html)
 
