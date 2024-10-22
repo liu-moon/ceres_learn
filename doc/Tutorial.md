@@ -373,3 +373,25 @@ Final   m: 0.291861 c: 0.131439
 
 ![least_squares_fit](./pic/least_squares_fit.png)
 
+### 鲁棒曲线拟合
+
+现在假设我们得到的数据有一些异常值，即有一些不遵循噪声模型的点。如果我们使用上面的代码来拟合这些数据，我们会得到如下所示的拟合结果。注意拟合曲线如何偏离真实值。
+
+![non_robust_least_squares_fit](./pic/non_robust_least_squares_fit.png)
+
+为了处理异常值，一种标准方法是使用 `LossFunction`。损失函数可以减少残差较大的残差块（通常对应于异常值）的影响。为了将损失函数与残差块关联起来，我们将
+
+```c++
+problem.AddResidualBlock(cost_function, nullptr , &m, &c);
+```
+
+变为
+
+```c++
+problem.AddResidualBlock(cost_function, new CauchyLoss(0.5) , &m, &c);
+```
+
+`CauchyLoss` 是 Ceres Solver 附带的损失函数之一。参数 $0.5$ 指定损失函数的尺度。因此，我们得到下面的拟合结果。注意拟合曲线如何重新更接近真实值曲线。
+
+![robust_least_squares_fit](./pic/robust_least_squares_fit.png)
+
