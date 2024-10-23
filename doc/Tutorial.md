@@ -395,3 +395,105 @@ problem.AddResidualBlock(cost_function, new CauchyLoss(0.5) , &m, &c);
 
 ![robust_least_squares_fit](./pic/robust_least_squares_fit.png)
 
+### Bundle Adjustment
+
+编写 Ceres 的主要原因之一是我们需要解决大规模BA问题。
+
+给定一组测量的图像特征位置和对应关系，BA调整的目标是找到最小化重投影误差的 3D 点位置和相机参数。该优化问题通常被表述为非线性最小二乘问题，其中误差是观察到的特征位置与相应 3D 点在相机图像平面上的投影之间的差异的平方 $L_2$ 范数。Ceres 对解决BA问题提供了广泛的支持。
+
+让我们解决 BAL 数据集中的一个问题。
+
+与往常一样，第一步是定义一个计算重新投影误差/残差的模板functor。该函unctor的结构与 `ExponentialResidual` 类似，其中有一个该对象的实例负责每个图像的观测。
+
+BAL 问题中的每个残差都取决于一个三维点和一个九参数相机。定义相机的九个参数是：三个用于作为罗德里格斯轴角矢量的旋转，三个用于平移，一个用于焦距，两个用于径向畸变。该相机型号的详细信息可以在 Bundler 主页和 BAL 主页上找到。
+
+```c++
+struct SnavelyReprojectionError {
+  SnavelyReprojectionError(double observed_x, double observed_y)
+      : observed_x(observed_x), observed_y(observed_y) {}
+
+  template <typename T>
+  bool operator()(const T* const camera,
+                  const T* const point,
+                  T* residuals) const {
+    // camera[0,1,2] are the angle-axis rotation.
+    T p[3];
+    ceres::AngleAxisRotatePoint(camera, point, p);
+    // camera[3,4,5] are the translation.
+    p[0] += camera[3]; p[1] += camera[4]; p[2] += camera[5];
+
+    // Compute the center of distortion. The sign change comes from
+    // the camera model that Noah Snavely's Bundler assumes, whereby
+    // the camera coordinate system has a negative z axis.
+    T xp = - p[0] / p[2];
+    T yp = - p[1] / p[2];
+
+    // Apply second and fourth order radial distortion.
+    const T& l1 = camera[7];
+    const T& l2 = camera[8];
+    T r2 = xp*xp + yp*yp;
+    T distortion = 1.0 + r2  * (l1 + l2  * r2);
+
+    // Compute final projected point position.
+    const T& focal = camera[6];
+    T predicted_x = focal * distortion * xp;
+    T predicted_y = focal * distortion * yp;
+
+    // The error is the difference between the predicted and observed position.
+    residuals[0] = predicted_x - T(observed_x);
+    residuals[1] = predicted_y - T(observed_y);
+    return true;
+  }
+
+   // Factory to hide the construction of the CostFunction object from
+   // the client code.
+   static ceres::CostFunction* Create(const double observed_x,
+                                      const double observed_y) {
+     return new ceres::AutoDiffCostFunction<SnavelyReprojectionError, 2, 9, 3>
+       (observed_x, observed_y);
+   }
+
+  double observed_x;
+  double observed_y;
+};
+```
+
+需要注意的是，与之前的例子不同，这是一个复杂的函数，计算它的解析雅可比矩阵会比较麻烦。自动微分使这一过程变得简单得多。`AngleAxisRotatePoint()` 函数和其他用于操作旋转的函数可以在`include/ceres/rotation.h` 中找到。
+
+有了该functor，BA问题可以构造如下：
+
+```c++
+ceres::Problem problem;
+for (int i = 0; i < bal_problem.num_observations(); ++i) {
+  ceres::CostFunction* cost_function =
+      SnavelyReprojectionError::Create(
+           bal_problem.observations()[2 * i + 0],
+           bal_problem.observations()[2 * i + 1]);
+  problem.AddResidualBlock(cost_function,
+                           nullptr /* squared loss */,
+                           bal_problem.mutable_camera_for_observation(i),
+                           bal_problem.mutable_point_for_observation(i));
+}
+```
+
+请注意，BA问题构造与曲线拟合示例非常相似——每个观测都会向目标函数添加一个项。
+
+由于这是一个大型稀疏问题（对于 `DENSE_QR` 来说很大），解决此问题的一种方法是将`Solver::Options::linear_solver_type` 设置为 `SPARSE_NORMAL_CHOLESKY` 并调用 `Solve()`。虽然这是一件合理的事情，但是BA问题具有特殊的稀疏结构，可以利用这种结构更有效地解决这些问题。Ceres 为这项任务提供了三个专门的求解器（统称为基于 Schur 的求解器）。示例代码使用了其中最简单的 `DENSE_SCHUR`。
+
+```c++
+ceres::Solver::Options options;
+options.linear_solver_type = ceres::DENSE_SCHUR;
+options.minimizer_progress_to_stdout = true;
+ceres::Solver::Summary summary;
+ceres::Solve(options, &problem, &summary);
+std::cout << summary.FullReport() << "\n";
+```
+
+有关更复杂的捆绑调整示例，该示例演示了如何使用 Ceres 的更高级功能，包括其各种线性求解器、稳健损失函数和流形，请参阅 examples/bundle_adjuster.cc
+
+运行代码：
+
+```shell
+./bin/main ./../data/bal/problem-49-7776-pre.txt
+```
+
