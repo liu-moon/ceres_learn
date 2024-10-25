@@ -17,3 +17,6 @@ target_link_libraries(main Ceres::ceres)
 
 add_executable(numeric_diff helloworld_numeric_diff.cpp)
 target_link_libraries(numeric_diff Ceres::ceres)
+
+add_executable(analytic_diff helloworld_analytic_diff.cpp)
+target_link_libraries(analytic_diff Ceres::ceres)

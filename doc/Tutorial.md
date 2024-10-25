@@ -518,3 +518,19 @@ std::cout << summary.FullReport() << "\n";
 基本步骤保持不变，使用数值微分
 
 微分方法，表示使用**中心差分**（Central Difference）计算梯度。Ceres 还支持其他方法，如 `ceres::FORWARD`（前向差分）和 `ceres::RIDDERS`（Ridders 方法）。
+
+### helloworld_analytic_diff.cc
+
+基本步骤保持不变，使用解析微分
+
+要自己编写类并重写Evaluate方法
+
+### 小结
+
+微分方法分为三种
+
+- 自动微分
+- 数值微分
+- 解析微分
+
+还有其他高级的方式。
