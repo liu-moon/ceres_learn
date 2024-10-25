@@ -512,3 +512,7 @@ std::cout << summary.FullReport() << "\n";
 3. 定义残差函数
 4. 向Problem中添加残差块
 5. 执行Solver
+
+### helloworld_numeric_diff.cc
+
+基本步骤保持不变，使用数值微分

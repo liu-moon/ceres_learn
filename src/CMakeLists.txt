@@ -14,3 +14,6 @@ find_package(Ceres REQUIRED)
 
 add_executable(main main.cpp)
 target_link_libraries(main Ceres::ceres)
+
+add_executable(numeric_diff helloworld_numeric_diff.cpp)
+target_link_libraries(numeric_diff Ceres::ceres)
