@@ -537,3 +537,7 @@ std::cout << summary.FullReport() << "\n";
 ### Powell's Function
 
 对于多个方程构建的问题，可以通过AddResidualBlock将方程构建到优化问题之中。
+
+### 曲线拟合
+
+一个点就构成一个残差块，通过AddResidualBlock加入到problem中。

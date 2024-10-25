@@ -23,3 +23,6 @@ target_link_libraries(analytic_diff Ceres::ceres)
 
 add_executable(my_powell powell.cpp)
 target_link_libraries(my_powell Ceres::ceres)
+
+add_executable(curve_fit curve_fitting.cpp)
+target_link_libraries(curve_fit Ceres::ceres)
