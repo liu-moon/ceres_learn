@@ -516,3 +516,5 @@ std::cout << summary.FullReport() << "\n";
 ### helloworld_numeric_diff.cc
 
 基本步骤保持不变，使用数值微分
+
+微分方法，表示使用**中心差分**（Central Difference）计算梯度。Ceres 还支持其他方法，如 `ceres::FORWARD`（前向差分）和 `ceres::RIDDERS`（Ridders 方法）。
