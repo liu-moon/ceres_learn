@@ -497,3 +497,18 @@ std::cout << summary.FullReport() << "\n";
 ./bin/main ./../data/bal/problem-49-7776-pre.txt
 ```
 
+
+
+
+
+
+
+## 总结
+
+### helloworld.cc
+
+1. 定义CostFunctor结构体并重载`()`运算符
+2. 定义Problem
+3. 定义残差函数
+4. 向Problem中添加残差块
+5. 执行Solver
