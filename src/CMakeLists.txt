@@ -1,7 +1,7 @@
 # 引入 FetchContent 模块
 include(FetchContent)
 
-# 使用 FetchContent_Declare 来获取 g2o 的源码
+# 使用 FetchContent_Declare 来获取 Ceres 的源码
 FetchContent_Declare(
   Ceres
   GIT_REPOSITORY https://github.com/ceres-solver/ceres-solver.git
