@@ -191,7 +191,6 @@ class QuadraticCostFunction : public ceres::SizedCostFunction<1, 1> {
 
 现在考虑一个稍微复杂一点的例子——Powell’s函数的最小化。设 $x = \left[x_1, x_2, x_3, x_4 \right]$
 且
-
 $$
 \begin{split}\begin{align}
 f_1(x) &= x_1 + 10x_2 \\
@@ -534,3 +533,7 @@ std::cout << summary.FullReport() << "\n";
 - 解析微分
 
 还有其他高级的方式。
+
+### Powell's Function
+
+对于多个方程构建的问题，可以通过AddResidualBlock将方程构建到优化问题之中。

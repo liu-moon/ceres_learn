@@ -20,3 +20,6 @@ target_link_libraries(numeric_diff Ceres::ceres)
 
 add_executable(analytic_diff helloworld_analytic_diff.cpp)
 target_link_libraries(analytic_diff Ceres::ceres)
+
+add_executable(my_powell powell.cpp)
+target_link_libraries(my_powell Ceres::ceres)
