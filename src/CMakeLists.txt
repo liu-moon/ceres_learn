@@ -26,3 +26,6 @@ target_link_libraries(my_powell Ceres::ceres)
 
 add_executable(curve_fit curve_fitting.cpp)
 target_link_libraries(curve_fit Ceres::ceres)
+
+add_executable(ba simple_bundle_adjuster.cpp)
+target_link_libraries(ba Ceres::ceres)

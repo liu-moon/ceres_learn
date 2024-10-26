@@ -402,7 +402,7 @@ problem.AddResidualBlock(cost_function, new CauchyLoss(0.5) , &m, &c);
 
 让我们解决 BAL 数据集中的一个问题。
 
-与往常一样，第一步是定义一个计算重新投影误差/残差的模板functor。该函unctor的结构与 `ExponentialResidual` 类似，其中有一个该对象的实例负责每个图像的观测。
+与往常一样，第一步是定义一个计算重新投影误差/残差的模板functor。该functor的结构与 `ExponentialResidual` 类似，其中有一个该对象的实例负责每个图像的观测。
 
 BAL 问题中的每个残差都取决于一个三维点和一个九参数相机。定义相机的九个参数是：三个用于作为罗德里格斯轴角矢量的旋转，三个用于平移，一个用于焦距，两个用于径向畸变。该相机型号的详细信息可以在 Bundler 主页和 BAL 主页上找到。
 
