@@ -1,2 +1,6 @@
 build/*
 !build/.gitkeep
+.idea/*
+cmake-build-debug/*
+.vscode/*
+!.vscode/launch.json

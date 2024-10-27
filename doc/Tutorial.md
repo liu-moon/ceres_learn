@@ -498,7 +498,33 @@ std::cout << summary.FullReport() << "\n";
 
 
 
+### 其他例子
 
+除了本章中的示例外，示例目录还包含许多其他示例：
+
+1. bundle_adjuster.cc 展示了如何使用 Ceres 的各种特性来解决BA问题。
+
+2. circle_fit.cc 展示如何将数据拟合成圆形。
+
+3. ellipse_approximation.cc 拟合具有近似线段轮廓的椭圆上随机分布的点。这是通过联合优化线段轮廓的控制点以及数据点的原像位置来实现的。此示例的目的是展示 Solver::Options::dynamic_sparsity 的一个示例用例，以及它如何有益于数值密集但动态稀疏的问题。
+
+4. denoising.cc 使用 Fields of Experts 模型实现图像去噪。
+
+5. nist.cc 实现并尝试解决 NIST 非线性回归问题。
+
+6. more_garbow_hillstrom.cc 论文中的测试问题子集
+
+7. libmv_bundle_adjuster.cc 是 Blender/libmv 使用的BA算法。
+
+8. libmv_homography.cc 该文件演示了如何求解两组点之间的单应性问题，并通过回调检查图像空间错误来使用自定义退出标准。
+
+9. robot_pose_mle.cc 此示例演示了如何使用 CostFunction 的 DynamicAutoDiffCostFunction 变体。DynamicAutoDiffCostFunction 适用于编译时不知道参数块数量或大小的情况。
+
+   此示例模拟机器人沿一维走廊行进，其中有噪声里程计读数和走廊尽头的噪声范围读数。通过融合噪声里程计和传感器读数，此示例演示了如何计算机器人在每个时间步的姿势的最大似然估计 (MLE)。
+
+10. slam/pose_graph_2d/pose_graph_2d.cc 同步定位与地图构建 (SLAM) 问题包括构建未知环境的地图，同时根据该地图进行定位。该问题的主要困难在于没有任何其他外部辅助信息（例如 GPS）。SLAM 一直被认为是机器人技术的基本挑战之一。SLAM 上有许多资源。姿势图优化问题是 SLAM 问题的一个示例。以下说明如何在具有相对姿势约束的二维中制定基于姿势图的 SLAM 问题。
+
+11. slam/pose_graph_3d/pose_graph_3d.cc 下面解释了如何使用相对姿势约束在三维空间中制定基于姿势图的 SLAM 问题。该示例还说明了如何将 Eigen 的几何模块与 Ceres 的自动微分功能结合使用。
 
 
 

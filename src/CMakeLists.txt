@@ -29,3 +29,7 @@ target_link_libraries(curve_fit Ceres::ceres)
 
 add_executable(ba simple_bundle_adjuster.cpp)
 target_link_libraries(ba Ceres::ceres)
+
+add_executable(ba2 bundle_adjuster.cpp bal_problem.cpp)
+target_link_libraries(ba2 Ceres::ceres)
+
